@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tradutor PT ↔ Xavante</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg: #f6f7f9;
+            --card: #ffffff;
+            --text: #111827;
+            --muted: #6b7280;
+            --primary: #1a73e8;
+            --border: #e5e7eb;
+            --shadow: 0 6px 20px rgba(0,0,0,.08);
+            --radius: 14px;
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            display:flex; align-items:center; justify-content:center; padding:24px;
+        }
+
+        .shell{width:100%; max-width:1024px}
+
+        .brand{
+            display:flex; align-items:center; gap:10px; margin-bottom:16px; user-select:none; justify-content:center;
+        }
+        .logo{width:28px; height:28px; border-radius:6px; background:conic-gradient(from 45deg, #4285F4 0 25%, #34A853 0 50%, #FBBC05 0 75%, #EA4335 0 100%);}
+        .brand h1{font-size:20px; font-weight:600; letter-spacing:.2px; margin:0}
+        .brand span{color:var(--muted); font-weight:500}
+
+        .card{
+            background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow);
+            padding:16px;
+        }
+
+        .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); padding:8px 4px 14px}
+
+        .lang-tabs{display:flex; gap:6px; align-items:center}
+        .tab{
+            padding:8px 12px; border-radius:999px; border:1px solid var(--border); background:#fff; color:var(--muted); font-weight:500; cursor:default;
+        }
+        .tab.active{border-color:transparent; background:rgba(26,115,232,.1); color:var(--primary)}
+        .swap{display:inline-flex; align-items:center; gap:8px; color:var(--muted); font-size:12px}
+
+        .panes{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px}
+
+        .pane{border:1px solid var(--border); border-radius:12px; padding:12px; background:#fff; display:flex; flex-direction:column; min-height:260px}
+        .pane label{font-size:12px; color:var(--muted); margin-bottom:8px;}
+        textarea{
+            width:100%; flex:1; resize:vertical; min-height:180px; border:none; outline:none; font: 500 15px/1.6 Inter, system-ui, sans-serif; color:var(--text);
+            background:transparent;
+        }
+        .ghost{color:#9ca3af}
+        .hint{font-size:12px; color:var(--muted); margin-top:8px}
+
+        .actions{display:flex; justify-content:flex-end; gap:10px; margin-top:16px}
+
+        .btn{
+            display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; user-select:none;
+            padding:10px 16px; border-radius:10px; border:1px solid var(--border); background:#fff; color:var(--text); font-weight:600;
+            transition:transform .02s ease, box-shadow .2s ease, border-color .2s ease;
+        }
+        .btn:hover{border-color:#d1d5db}
+        .btn:active{transform:translateY(1px)}
+        .btn.primary{background:var(--primary); color:#fff; border-color:transparent; box-shadow:0 6px 14px rgba(26,115,232,.25)}
+        .btn.primary:hover{background:#1557b0; box-shadow:0 8px 18px rgba(26,115,232,.35)}
+
+        /* Modal styles */
+        .modal-overlay{
+            position:fixed; inset:0; display:none; place-items:center; background:rgba(17,24,39,.5);
+            z-index:50; backdrop-filter:blur(2px);
+        }
+        .modal-overlay.show{
+            display:grid;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal{
+            width:min(560px, 92vw); background:#fff; border-radius:16px; border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,.2);
+            padding:24px; transform: scale(.95); animation: slideIn 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px) scale(.95); }
+            to { transform: translateY(0) scale(1); }
+        }
+
+        .modal h2{margin:0 0 12px; font-size:22px; font-weight:600}
+        .modal p{margin:0; color:#374151; line-height:1.7; font-size:15px}
+        .modal .footer{display:flex; justify-content:flex-end; gap:12px; margin-top:24px}
+
+        .close-x{
+            position:absolute; top:16px; right:20px; font-weight:700; color:#9CA3AF; cursor:pointer; padding:8px; border-radius:8px;
+            font-size:20px; line-height:1; transition:all .2s ease;
+        }
+        .close-x:hover{background:#F3F4F6; color:#6B7280}
+
+        .btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .close-x:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 820px){
+            .panes{grid-template-columns:1fr}
+            .actions{justify-content:stretch}
+            .btn{width:100%}
+            .toolbar{flex-direction:column; align-items:stretch; gap:12px}
+            .hint{text-align:center}
+        }
+    </style>
+</head>
+<body>
+<div class="shell">
+    <div class="brand" aria-hidden="true">
+        <div class="logo" aria-hidden="true"></div>
+        <h1>Tradutor</h1>
+        <span>Xavante</span>
+    </div>
+
+    <div class="card" role="region" aria-label="Tradutor de idiomas">
+        <div class="toolbar">
+            <div class="lang-tabs" aria-label="Idiomas selecionados">
+                <span class="tab active" aria-current="true">Português</span>
+                <span class="swap" aria-hidden="true">→</span>
+                <span class="tab active">Xavante</span>
+            </div>
+            <div class="hint">Dica: cole um texto à esquerda e clique em "Traduzir".</div>
+        </div>
+
+        <div class="panes">
+            <div class="pane">
+                <label for="src">Texto em Português</label>
+                <textarea
+                        id="src"
+                        placeholder="Digite ou cole seu texto em português aqui…"
+                ></textarea>
+                <div class="hint">Digite o texto que deseja traduzir</div>
+            </div>
+            <div class="pane">
+                <label for="dst">Tradução em Xavante</label>
+                <textarea
+                        id="dst"
+                        class="ghost"
+                        placeholder="A tradução aparecerá aqui"
+                        readonly
+                ></textarea>
+                <div class="hint">A tradução será exibida após clicar em "Traduzir"</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button
+                    id="translate-btn"
+                    class="btn primary"
+                    aria-label="Traduzir texto"
+            >
+                Traduzir
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de informação -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-desc">
+        <button
+                class="close-x"
+                id="close-modal"
+                aria-label="Fechar modal"
+        >×</button>
+
+        <h2 id="modal-title">Quase lá…</h2>
+        <p id="modal-desc">
+            Quando alguma coisa é boa demais para ser verdade, é porque geralmente é.
+            Mas não desanime, quem sabe um dia temos um tradutor automático, não é mesmo?
+            Até lá, bons estudos da língua Xavante!
+        </p>
+        <div class="footer">
+            <button
+                    class="btn"
+                    id="close-modal-btn"
+            >
+                Entendi
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const translateBtn = document.getElementById('translate-btn');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const closeModalX = document.getElementById('close-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
+    // Abrir modal
+    translateBtn.addEventListener('click', function() {
+        modalOverlay.classList.add('show');
+        closeModalX.focus();
+    });
+
+    // Fechar modal (X)
+    closeModalX.addEventListener('click', function() {
+        modalOverlay.classList.remove('show');
+    });
+
+    // Fechar modal (botão)
+    closeModalBtn.addEventListener('click', function() {
+        modalOverlay.classList.remove('show');
+    });
+
+    // Fechar modal com Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('show')) {
+            modalOverlay.classList.remove('show');
+        }
+    });
+
+    // Fechar modal clicando fora dele
+    modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+            modalOverlay.classList.remove('show');
+        }
+    });
+</script>
+</body>
+</html>
