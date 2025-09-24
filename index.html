@@ -187,7 +187,7 @@
         <h2 id="modal-title">Quase lá…</h2>
         <p id="modal-desc">
             Quando alguma coisa é boa demais para ser verdade, é porque geralmente é.
-            Mas não desanime, quem sabe um dia temos um tradutor automático, não é mesmo?
+            Mas não desanime, quem sabe um dia teremos um tradutor automático, não é mesmo?
             Até lá, bons estudos da língua Xavante!
         </p>
         <div class="footer">
@@ -209,6 +209,14 @@
 
     // Abrir modal
     translateBtn.addEventListener('click', function() {
+        const srcText = document.getElementById('src').value.trim();
+
+        if (!srcText) {
+            alert('Por favor, digite algum texto em português antes de traduzir.');
+            document.getElementById('src').focus();
+            return;
+        }
+
         modalOverlay.classList.add('show');
         closeModalX.focus();
     });
